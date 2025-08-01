@@ -1,0 +1,13 @@
+<div class="container mt-4">
+  <h3>Mi Perfil de Comercio</h3>
+  <form method="POST" action="/comercio/perfil" enctype="multipart/form-data">
+    <input type="text" name="telefono" value="{{comercio.telefono}}" class="form-control mb-2" required>
+    <input type="email" name="correo" value="{{comercio.correo}}" class="form-control mb-2" required>
+    <label>Hora de apertura</label>
+    <input type="time" name="apertura" value="{{comercio.apertura}}" class="form-control mb-2" required>
+    <label>Hora de cierre</label>
+    <input type="time" name="cierre" value="{{comercio.cierre}}" class="form-control mb-2" required>
+    <input type="file" name="logo" class="form-control mb-2">
+    <button class="btn btn-success">Guardar</button>
+  </form>
+</div>

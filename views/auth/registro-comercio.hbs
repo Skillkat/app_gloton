@@ -1,0 +1,26 @@
+<div class="container mt-5">
+  <h2>Registro de Comercio</h2>
+  <form method="POST" action="/registro-comercio" enctype="multipart/form-data">
+    <input type="text" name="nombre" placeholder="Nombre del Comercio" required class="form-control mb-2">
+    <input type="text" name="telefono" placeholder="Teléfono" required class="form-control mb-2">
+    <input type="email" name="correo" placeholder="Correo electrónico" required class="form-control mb-2">
+    <input type="file" name="logo" class="form-control mb-2">
+
+    <label>Hora de Apertura</label>
+    <input type="time" name="apertura" required class="form-control mb-2">
+    <label>Hora de Cierre</label>
+    <input type="time" name="cierre" required class="form-control mb-2">
+
+    <select name="tipo" class="form-control mb-2" required>
+      <option value="">Seleccione tipo de comercio</option>
+      {{#each tipos}} <!-- Este bloque debe ser inyectado desde el backend -->
+        <option value="{{this.id}}">{{this.nombre}}</option>
+      {{/each}}
+    </select>
+
+    <input type="password" name="contrasena" placeholder="Contraseña" required class="form-control mb-2">
+    <input type="password" name="confirmar" placeholder="Confirmar contraseña" required class="form-control mb-2">
+
+    <button type="submit" class="btn btn-success w-100">Registrarse</button>
+  </form>
+</div>
