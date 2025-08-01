@@ -1,9 +1,0 @@
-<div class="container mt-4">
-  <h3>{{#if categoria}}Editar{{else}}Nueva{{/if}} Categoría</h3>
-  <form method="POST" action="{{action}}">
-    <input type="text" name="nombre" class="form-control mb-2" value="{{categoria.nombre}}" required placeholder="Nombre">
-    <textarea name="descripcion" class="form-control mb-2" required placeholder="Descripción">{{categoria.descripcion}}</textarea>
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="/comercio/categorias" class="btn btn-secondary">Cancelar</a>
-  </form>
-</div>
