@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <h3>Mis Comercios Favoritos</h3>
+  <div class="row">
+    {{#each favoritos}}
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <img src="{{this.logo}}" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">{{this.nombre}}</h5>
+          <a href="/cliente/catalogo/{{this.id}}" class="btn btn-primary">Ver productos</a>
+          <form method="POST" action="/cliente/favoritos/eliminar/{{this.id}}" class="mt-2">
+            <button class="btn btn-danger">Quitar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>

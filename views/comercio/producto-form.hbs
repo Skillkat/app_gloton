@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h3>{{#if producto}}Editar{{else}}Nuevo{{/if}} Producto</h3>
+  <form method="POST" action="{{action}}" enctype="multipart/form-data">
+    <input type="text" name="nombre" value="{{producto.nombre}}" class="form-control mb-2" required placeholder="Nombre del producto">
+    <textarea name="descripcion" class="form-control mb-2" required placeholder="Descripción">{{producto.descripcion}}</textarea>
+    <input type="number" name="precio" value="{{producto.precio}}" class="form-control mb-2" required placeholder="Precio">
+    
+    <select name="categoriaId" class="form-control mb-2" required>
+      {{#each categorias}}
+        <option value="{{this.id}}" {{#ifCond this.id "==" ../producto.categoriaId}}selected{{/ifCond}}>
+          {{this.nombre}}
+        </option>
+      {{/each}}
+    </select>
+
+    <input type="file" name="imagen" class="form-control mb-2">
+    {{#if producto.imagen}}
+      <img src="{{producto.imagen}}" width="100" class="mb-2">
+    {{/if}}
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="/comercio/productos" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>

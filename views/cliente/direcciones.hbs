@@ -1,0 +1,15 @@
+<div class="container mt-4">
+  <h3>Mis Direcciones</h3>
+  <a href="/cliente/direcciones/crear" class="btn btn-success mb-3">Agregar nueva</a>
+  <ul class="list-group">
+    {{#each direcciones}}
+    <li class="list-group-item">
+      <strong>{{this.nombre}}</strong> - {{this.descripcion}}
+      <div class="float-end">
+        <a href="/cliente/direcciones/editar/{{this.id}}" class="btn btn-sm btn-primary">Editar</a>
+        <a href="/cliente/direcciones/eliminar/{{this.id}}" class="btn btn-sm btn-danger">Eliminar</a>
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+</div>
