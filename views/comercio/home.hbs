@@ -1,0 +1,10 @@
+<div class="container mt-4">
+  <h3>Pedidos Recibidos</h3>
+  <div class="list-group">
+    {{#each pedidos}}
+    <a href="/comercio/pedido/{{this.id}}" class="list-group-item list-group-item-action">
+      {{this.fecha}} - {{this.estado}} - ${{this.total}} - {{this.productos.length}} productos
+    </a>
+    {{/each}}
+  </div>
+</div>
