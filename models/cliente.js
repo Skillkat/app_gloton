@@ -5,4 +5,3 @@ module.exports = (sequelize, DataTypes) => {
       telefono: DataTypes.STRING(20)
     }, { timestamps: false });
   };
-  

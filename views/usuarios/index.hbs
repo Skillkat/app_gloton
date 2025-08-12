@@ -1,0 +1,30 @@
+{{> navbar }}
+<div class="container mt-5">
+  <h2>Lista de Usuarios</h2>
+  <a href="/usuarios/create" class="btn btn-primary mb-3">Agregar Usuario</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each usuarios}}
+      <tr>
+        <td>{{this.id}}</td>
+        <td>{{this.nombre}}</td>
+        <td>{{this.correo}}</td>
+        <td>
+          <a href="/usuarios/edit/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/usuarios/delete/{{this.id}}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

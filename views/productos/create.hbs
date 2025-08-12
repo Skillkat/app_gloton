@@ -1,0 +1,19 @@
+{{> navbar }}
+<div class="container mt-5">
+  <h2>Crear Producto</h2>
+  <form action="/productos" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nombre del Producto</label>
+      <input type="text" class="form-control" name="nombre" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Precio</label>
+      <input type="number" class="form-control" name="precio" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Stock</label>
+      <input type="number" class="form-control" name="stock" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>

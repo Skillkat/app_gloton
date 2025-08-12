@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Comercio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Registrar Comercio</h2>
+    <form action="/comercios/create" method="POST">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre del Comercio</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+      </div>
+      <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="direccion" name="direccion" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="/comercios" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</body>
+</html>
