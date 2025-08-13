@@ -1,21 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const authController = require("../controllers/auth.controller");
-const authMiddleware = require("../middleware/auth.middleware");
+const authController = require('../controllers/auth.controller');
+console.log(authController);
 
-router.get("/dashboard", authMiddleware.isAuthenticated, (req, res) => {
-    res.render("dashboard", { usuario: req.session.usuario });
-  });
-  
-  // Solo para admins
-  router.get("/admin", authMiddleware.isTipo("admin"), (req, res) => {
-    res.render("admin/panel", { usuario: req.session.usuario });
-  });
+// Mostrar formularios
+router.get('/login', authController.showLogin);
+router.get('/register', authController.showRegister);
 
-router.get("/login", authController.formLogin);
-router.post("/login", authController.login);
-router.get("/register", authController.formRegister);
-router.post("/register", authController.register);
-router.get("/logout", authController.logout);
+// Procesar formularios
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+
+// Logout
+// router.get('/logout', authController.logout);
 
 module.exports = router;

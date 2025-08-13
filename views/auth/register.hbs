@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  {{!-- <link rel="stylesheet" href="/css/bootstrap.min.css"> --}}
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">GlotonApp</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/login">Iniciar sesión</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/register">Registrarse</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <div class="container mt-5">
+    <h2 class="mb-4">Registrar usuario</h2>
+    <form action="/auth/register" method="POST">
+  <div class="mb-3">
+    <label for="nombre" class="form-label">Nombre completo</label>
+    <input type="text" class="form-control" name="nombre" required>
+  </div>
+  <div class="mb-3">
+    <label for="correo" class="form-label">Correo electrónico</label>
+    <input type="email" class="form-control" name="correo" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="tipo" class="form-label">Tipo de Usuario</label>
+    <select class="form-control" name="tipo" required>
+      <option value="">Seleccione un tipo</option>
+      <option value="cliente">Cliente</option>
+      <option value="comercio">Comercio</option>
+      <option value="delivery">Delivery</option>
+      <option value="admin">Administrador</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="clave" class="form-label">Contraseña</label>
+    <input type="password" class="form-control" name="contrasena" required>
+  </div>
+  <button type="submit" class="btn btn-success">Registrar</button>
+</form>
+
+</body>
+</html>

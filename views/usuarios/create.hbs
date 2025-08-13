@@ -1,0 +1,31 @@
+{{> navbar }}
+<div class="container mt-5">
+  <h2>Crear Usuario</h2>
+  <form action="/usuarios" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" name="nombre" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Correo</label>
+      <input type="email" class="form-control" name="correo" required>
+    </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tipo</label>
+        <select class="form-control" name="tipo" required>
+          <option value="cliente">Cliente</option>
+          <option value="comercio">Comercio</option>
+          <option value="delivery">Delivery</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+  </form>
+</div>

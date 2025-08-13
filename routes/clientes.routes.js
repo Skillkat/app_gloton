@@ -1,18 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const controller = require("../controllers/cliente.controller");
-const authMiddleware = require("../middleware/auth.middleware");
+const clienteController = require('../controllers/cliente.controller');
+const { isAuthenticated } = require('../middlewares/auth.middleware'); // Importa la función específica
 
-router.get("/dashboard", authMiddleware.isAuthenticated, (req, res) => {
-    res.render("dashboard", { usuario: req.session.usuario });
-  });
-  
-  // Solo para admins
-  router.get("/admin", authMiddleware.isTipo("admin"), (req, res) => {
-    res.render("admin/panel", { usuario: req.session.usuario });
+router.get('/', isAuthenticated, (req, res) => {
+    res.render('routes/cliente');
   });
 
-router.get("/", controller.listarClientes);
-router.post("/crear", controller.crearCliente);
+router.get('/', isAuthenticated, clienteController.index);
+router.get('/create', isAuthenticated, clienteController.create);
+router.post('/create', isAuthenticated, clienteController.store);
+router.get('/edit/:id', isAuthenticated, clienteController.edit);
+router.post('/edit/:id', isAuthenticated, clienteController.update);
+router.post('/delete/:id', isAuthenticated, clienteController.destroy);
 
 module.exports = router;

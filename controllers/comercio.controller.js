@@ -1,13 +1,31 @@
-const db = require("../models");
+const db = require('../models');
 const Comercio = db.Comercio;
 
-exports.listarComercios = async (req, res) => {
+exports.index = async (req, res) => {
   const comercios = await Comercio.findAll();
-  res.render("comercios/lista", { comercios });
+  res.render('comercios/index', { comercios });
 };
 
-exports.crearComercio = async (req, res) => {
-  const { id_comercio, nombre_local, direccion, telefono, horario_apertura, horario_cierre } = req.body;
-  await Comercio.create({ id_comercio, nombre_local, direccion, telefono, horario_apertura, horario_cierre });
-  res.redirect("/comercios");
+exports.create = (req, res) => {
+  res.render('comercios/create');
+};
+
+exports.store = async (req, res) => {
+  await Comercio.create(req.body);
+  res.redirect('/comercios');
+};
+
+exports.edit = async (req, res) => {
+  const comercio = await Comercio.findByPk(req.params.id);
+  res.render('comercios/edit', { comercio });
+};
+
+exports.update = async (req, res) => {
+  await Comercio.update(req.body, { where: { id: req.params.id } });
+  res.redirect('/comercios');
+};
+
+exports.destroy = async (req, res) => {
+  await Comercio.destroy({ where: { id: req.params.id } });
+  res.redirect('/comercios');
 };

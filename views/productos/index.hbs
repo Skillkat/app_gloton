@@ -1,0 +1,32 @@
+{{> navbar }}
+<div class="container mt-5">
+  <h2>Lista de Productos</h2>
+  <a href="/productos/create" class="btn btn-primary mb-3">Agregar Producto</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each productos}}
+      <tr>
+        <td>{{this.id}}</td>
+        <td>{{this.nombre}}</td>
+        <td>{{this.precio}}</td>
+        <td>{{this.stock}}</td>
+        <td>
+          <a href="/productos/edit/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/productos/delete/{{this.id}}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

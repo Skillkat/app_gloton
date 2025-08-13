@@ -1,18 +1,16 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const controller = require("../controllers/comercio.controller");
-const authMiddleware = require("../middleware/auth.middleware");
+const comercioController = require('../controllers/comercio.controller');
+const { isAuthenticated, isTipo } = require('../middlewares/auth.middleware');
 
-router.get("/dashboard", authMiddleware.isAuthenticated, (req, res) => {
-    res.render("dashboard", { usuario: req.session.usuario });
-  });
-  
-  // Solo para admins
-  router.get("/admin", authMiddleware.isTipo("admin"), (req, res) => {
-    res.render("admin/panel", { usuario: req.session.usuario });
-  });
+router.get('/', isAuthenticated, comercioController.index, isTipo('comercio'), (req, res) => {
+  res.render('comercio/index');
+});
 
-router.get("/", controller.listarComercios);
-router.post("/crear", controller.crearComercio);
+router.get('/create', isAuthenticated, comercioController.create);
+router.post('/create', isAuthenticated, comercioController.store);
+router.get('/edit/:id', isAuthenticated, comercioController.edit);
+router.post('/edit/:id', isAuthenticated, comercioController.update);
+router.post('/delete/:id', isAuthenticated, comercioController.destroy);
 
 module.exports = router;

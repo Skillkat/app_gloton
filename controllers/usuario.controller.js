@@ -1,21 +1,31 @@
-const db = require("../models");
+const db = require('../models');
 const Usuario = db.Usuario;
 
-exports.listarUsuarios = async (req, res) => {
-  try {
-    const usuarios = await Usuario.findAll();
-    res.render("usuarios/lista", { usuarios });
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+exports.index = async (req, res) => {
+  const usuarios = await Usuario.findAll();
+  res.render('usuarios/index', { usuarios });
 };
 
-exports.crearUsuario = async (req, res) => {
-  try {
-    const { nombre, correo, contrasena, tipo } = req.body;
-    const usuario = await Usuario.create({ nombre, correo, contrasena, tipo });
-    res.redirect("/usuarios");
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+exports.create = (req, res) => {
+  res.render('usuarios/create');
+};
+
+exports.store = async (req, res) => {
+  await Usuario.create(req.body);
+  res.redirect('/usuarios');
+};
+
+exports.edit = async (req, res) => {
+  const usuario = await Usuario.findByPk(req.params.id);
+  res.render('usuarios/edit', { usuario });
+};
+
+exports.update = async (req, res) => {
+  await Usuario.update(req.body, { where: { id: req.params.id } });
+  res.redirect('/usuarios');
+};
+
+exports.destroy = async (req, res) => {
+  await Usuario.destroy({ where: { id: req.params.id } });
+  res.redirect('/usuarios');
 };

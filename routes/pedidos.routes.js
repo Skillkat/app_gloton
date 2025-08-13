@@ -1,18 +1,12 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const controller = require("../controllers/pedido.controller");
-const authMiddleware = require("../middleware/auth.middleware");
+const controller = require('../controllers/pedido.controller');
 
-router.get("/dashboard", authMiddleware.isAuthenticated, (req, res) => {
-    res.render("dashboard", { usuario: req.session.usuario });
-  });
-  
-  // Solo para admins
-  router.get("/admin", authMiddleware.isTipo("admin"), (req, res) => {
-    res.render("admin/panel", { usuario: req.session.usuario });
-  });
-
-router.get("/", controller.listarPedidos);
-router.post("/crear", controller.crearPedido);
+router.get('/', controller.index);
+router.get('/create', controller.create);
+router.post('/store', controller.store);
+router.get('/edit/:id', controller.edit);
+router.post('/update/:id', controller.update);
+router.get('/delete/:id', controller.delete);
 
 module.exports = router;
