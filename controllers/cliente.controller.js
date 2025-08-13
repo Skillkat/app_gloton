@@ -2,8 +2,13 @@ const db = require('../models');
 const Cliente = db.Cliente;
 
 exports.index = async (req, res) => {
-  const clientes = await Cliente.findAll();
-  res.render('clientes/index', { clientes });
+  try {
+    const clientes = await Cliente.findAll();
+    res.render('clientes/index', { clientes });
+  } catch (error) {
+    console.error(error);
+    res.render('clientes/index', { clientes: [], error: 'Error al cargar clientes' });
+  }
 };
 
 exports.create = (req, res) => {
@@ -21,24 +26,30 @@ exports.store = async (req, res) => {
 };
 
 exports.edit = async (req, res) => {
-  const cliente = await Cliente.findByPk(req.params.id);
-  if (!cliente) return res.redirect('/clientes');
-  res.render('clientes/edit', { cliente });
+  try {
+    const cliente = await Cliente.findByPk(req.params.id);
+    if (!cliente) return res.redirect('/clientes');
+    res.render('clientes/edit', { cliente });
+  } catch (error) {
+    console.error(error);
+    res.redirect('/clientes');
+  }
 };
 
 exports.update = async (req, res) => {
   try {
-    await Cliente.update(req.body, { where: { id_cliente: req.params.id } });
+    await Cliente.update(req.body, { where: { id: req.params.id } }); // Cambiado de id_cliente a id
     res.redirect('/clientes');
   } catch (error) {
     console.error(error);
-    res.render('clientes/edit', { error: 'Error al actualizar cliente' });
+    const cliente = await Cliente.findByPk(req.params.id);
+    res.render('clientes/edit', { cliente, error: 'Error al actualizar cliente' });
   }
 };
 
 exports.destroy = async (req, res) => {
   try {
-    await Cliente.destroy({ where: { id_cliente: req.params.id } });
+    await Cliente.destroy({ where: { id: req.params.id } }); // Cambiado
     res.redirect('/clientes');
   } catch (error) {
     console.error(error);

@@ -12,10 +12,9 @@ exports.showRegister = (req, res) => {
 
 exports.register = async (req, res) => {
   try {
-    const { nombre, correo, password, tipo } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { nombre, correo, contrasena, tipo } = req.body; // Cambiado de password a contrasena
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-    // Crear usuario
     await Usuario.create({
       nombre,
       correo,
@@ -32,24 +31,22 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { correo, password } = req.body;
+    const { correo, contrasena } = req.body; // Cambiado de password
     const usuario = await Usuario.findOne({ where: { correo } });
 
     if (!usuario) {
       return res.render('auth/login', { error: 'Usuario no encontrado' });
     }
 
-    const isMatch = await bcrypt.compare(password, usuario.contrasena);
+    const isMatch = await bcrypt.compare(contrasena, usuario.contrasena);
     if (!isMatch) {
       return res.render('auth/login', { error: 'Contraseña incorrecta' });
     }
 
-    // Guardar datos en sesión
     req.session.usuarioId = usuario.id;
     req.session.usuarioNombre = usuario.nombre;
     req.session.usuarioTipo = usuario.tipo;
 
-    // Redirección según el tipo de usuario
     switch (usuario.tipo) {
       case 'admin':
         return res.redirect('/admin');
@@ -60,7 +57,7 @@ exports.login = async (req, res) => {
       case 'delivery':
         return res.redirect('/delivery');
       default:
-        return res.redirect('/'); // fallback
+        return res.redirect('/');
     }
   } catch (error) {
     console.error(error);
@@ -68,3 +65,9 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.logout = (req, res) => { // Agregado
+  req.session.destroy(err => {
+    if (err) console.error(err);
+    res.redirect('/');
+  });
+};

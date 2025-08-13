@@ -6,6 +6,8 @@ exports.isAuthenticated = (req, res, next) => {
   }
 };
 
+
+
 // Middleware para verificar si el usuario tiene uno o varios roles permitidos
 
 exports.isTipo = (tiposPermitidos) => {

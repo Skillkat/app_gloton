@@ -39,10 +39,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 
-// Rutas según tipo de usuario (no autenticadas)
-app.use('/cliente', clienteRoutes);
-app.use('/comercio', comercioRoutes);
-app.use('/delivery', deliveryRoutes);
 
 // Rutas protegidas (requieren autenticación)
 app.use('/admin', isAuthenticated, adminRoutes);
@@ -58,6 +54,13 @@ app.use("/detalle_pedidos", isAuthenticated, require("./routes/detalle_pedidos.r
 app.use((req, res) => {
   res.status(404).send('Página no encontrada');
 });
+
+app.engine('.hbs', exphbs.engine({
+  extname: '.hbs',
+  layoutsDir: path.join(__dirname, 'views', 'layouts'),
+  partialsDir: path.join(__dirname, 'views', 'partials')
+}));
+
 
 // Conexión a la base de datos
 db.sequelize.sync({ force: false }).then(() => {

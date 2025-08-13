@@ -10,8 +10,6 @@ router.get('/register', authController.showRegister);
 // Procesar formularios
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-
-// Logout
-// router.get('/logout', authController.logout);
+router.get('/logout', authController.logout); // Agregado
 
 module.exports = router;
