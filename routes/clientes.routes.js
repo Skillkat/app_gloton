@@ -1,17 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const clienteController = require('../controllers/cliente.controller');
-const { isAuthenticated } = require('../middlewares/auth.middleware'); // Importa la función específica
-
-router.get('/', isAuthenticated, (req, res) => {
-    res.render('routes/cliente');
-  });
+const { isAuthenticated } = require('../middlewares/auth.middleware');
 
 router.get('/', isAuthenticated, clienteController.index);
 router.get('/create', isAuthenticated, clienteController.create);
-router.post('/create', isAuthenticated, clienteController.store);
-router.get('/edit/:id', isAuthenticated, clienteController.edit);
-router.post('/edit/:id', isAuthenticated, clienteController.update);
-router.post('/delete/:id', isAuthenticated, clienteController.destroy);
+router.post('/', isAuthenticated, clienteController.store);
+router.get('/:id/edit', isAuthenticated, clienteController.edit);
+router.post('/:id', isAuthenticated, clienteController.update); // Cambiado de /:id/edit
+router.post('/:id/delete', isAuthenticated, clienteController.destroy); // Ajustado
 
 module.exports = router;

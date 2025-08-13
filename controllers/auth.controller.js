@@ -1,18 +1,17 @@
-const db = require('../models');
-const Usuario = db.Usuario;
+const { Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
 
 exports.showLogin = (req, res) => {
-  res.render('auth/login');
+  res.render('auth/login', { error: null });
 };
 
 exports.showRegister = (req, res) => {
-  res.render('auth/register');
+  res.render('auth/register', { error: null });
 };
 
 exports.register = async (req, res) => {
   try {
-    const { nombre, correo, contrasena, tipo } = req.body; // Cambiado de password a contrasena
+    const { nombre, correo, contrasena, tipo } = req.body;
     const hashedPassword = await bcrypt.hash(contrasena, 10);
 
     await Usuario.create({
@@ -24,28 +23,33 @@ exports.register = async (req, res) => {
 
     res.redirect('/auth/login');
   } catch (error) {
-    console.error(error);
+    console.error('Error en register:', error);
     res.render('auth/register', { error: 'Error al registrar usuario' });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const { correo, contrasena } = req.body; // Cambiado de password
+    const { correo, contrasena } = req.body;
+    console.log('Intentando login con correo:', correo); // Depuración
     const usuario = await Usuario.findOne({ where: { correo } });
 
     if (!usuario) {
+      console.log('Usuario no encontrado:', correo); // Depuración
       return res.render('auth/login', { error: 'Usuario no encontrado' });
     }
 
     const isMatch = await bcrypt.compare(contrasena, usuario.contrasena);
     if (!isMatch) {
+      console.log('Contraseña incorrecta para:', correo); // Depuración
       return res.render('auth/login', { error: 'Contraseña incorrecta' });
     }
 
-    req.session.usuarioId = usuario.id;
-    req.session.usuarioNombre = usuario.nombre;
-    req.session.usuarioTipo = usuario.tipo;
+    req.session.userId = usuario.id;
+    req.session.userName = usuario.nombre;
+    req.session.userType = usuario.tipo;
+
+    console.log('Login exitoso - Usuario:', usuario.correo, 'Tipo:', usuario.tipo, 'Session:', req.session); // Depuración
 
     switch (usuario.tipo) {
       case 'admin':
@@ -60,14 +64,17 @@ exports.login = async (req, res) => {
         return res.redirect('/');
     }
   } catch (error) {
-    console.error(error);
-    res.render('auth/login', { error: 'Error en login' });
+    console.error('Error en login:', error);
+    res.render('auth/login', { error: 'Error al iniciar sesión' });
   }
 };
 
-exports.logout = (req, res) => { // Agregado
+exports.logout = (req, res) => {
   req.session.destroy(err => {
-    if (err) console.error(err);
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+      return res.status(500).render('error', { message: 'Error al cerrar sesión' });
+    }
     res.redirect('/');
   });
 };

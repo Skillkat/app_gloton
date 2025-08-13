@@ -8,14 +8,14 @@
 <body>
   <div class="container mt-4">
     <h2 class="mb-4">Editar cliente</h2>
-    <form action="/clientes/edit/{{cliente.id}}" method="POST">
+    <form action="/clientes/{{cliente.id}}" method="POST">
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
         <input type="text" class="form-control" name="nombre" value="{{cliente.nombre}}" required>
       </div>
       <div class="mb-3">
-        <label for="correo" class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" name="correo" value="{{cliente.correo}}" required>
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" name="direccion" value="{{cliente.direccion}}" required>
       </div>
       <div class="mb-3">
         <label for="telefono" class="form-label">Teléfono</label>

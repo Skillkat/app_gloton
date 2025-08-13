@@ -3,14 +3,11 @@ const router = express.Router();
 const deliveryController = require('../controllers/delivery.controller');
 const { isAuthenticated, isTipo } = require('../middlewares/auth.middleware');
 
-router.get('/', isAuthenticated, deliveryController.index, isTipo('delivery'), (req, res) => {
-  res.render('delivery/index');
-});
-
-router.get('/create', isAuthenticated, deliveryController.create);
-router.post('/create', isAuthenticated, deliveryController.store);
-router.get('/edit/:id', isAuthenticated, deliveryController.edit);
-router.post('/edit/:id', isAuthenticated, deliveryController.update);
-router.post('/delete/:id', isAuthenticated, deliveryController.destroy);
+router.get('/', isAuthenticated, isTipo('delivery'), deliveryController.index);
+router.get('/create', isAuthenticated, isTipo('delivery'), deliveryController.create);
+router.post('/', isAuthenticated, isTipo('delivery'), deliveryController.store);
+router.get('/:id/edit', isAuthenticated, isTipo('delivery'), deliveryController.edit);
+router.post('/:id', isAuthenticated, isTipo('delivery'), deliveryController.update);
+router.post('/:id/delete', isAuthenticated, isTipo('delivery'), deliveryController.destroy);
 
 module.exports = router;

@@ -4,7 +4,7 @@ const Comercio = db.Comercio;
 exports.index = async (req, res) => {
   try {
     const comercios = await Comercio.findAll();
-    res.render('comercios/index', { comercios });
+    res.render('comercios/index', { comercios, csrfToken: req.csrfToken() });
   } catch (error) {
     console.error(error);
     res.render('comercios/index', { comercios: [], error: 'Error al cargar comercios' });
