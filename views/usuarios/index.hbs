@@ -1,13 +1,21 @@
-{{> navbar }}
+{{> navbar}}
 <div class="container mt-5">
   <h2>Lista de Usuarios</h2>
   <a href="/usuarios/create" class="btn btn-primary mb-3">Agregar Usuario</a>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if usuarios.length}}
   <table class="table table-bordered">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nombre</th>
         <th>Correo</th>
+        <th>Tipo</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -17,9 +25,10 @@
         <td>{{this.id}}</td>
         <td>{{this.nombre}}</td>
         <td>{{this.correo}}</td>
+        <td>{{this.tipo}}</td>
         <td>
-          <a href="/usuarios/edit/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
-          <form action="/usuarios/delete/{{this.id}}" method="POST" class="d-inline">
+          <a href="/usuarios/{{this.id}}/edit" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/usuarios/{{this.id}}?_method=DELETE" method="POST" class="d-inline">
             <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
           </form>
         </td>
@@ -27,4 +36,7 @@
       {{/each}}
     </tbody>
   </table>
+  {{else}}
+    <p>No se encontraron usuarios.</p>
+  {{/if}}
 </div>

@@ -1,26 +1,33 @@
-{{> navbar }}
+{{> navbar}}
 <div class="container mt-5">
   <h2>Editar Usuario</h2>
-  <form action="/usuarios/{{usuario.id}}" method="POST">
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  <form action="/usuarios/{{usuario.id}}?_method=PUT" method="POST">
     <div class="mb-3">
       <label class="form-label">Nombre</label>
       <input type="text" class="form-control" name="nombre" value="{{usuario.nombre}}" required>
     </div>
-
-      <div class="mb-3">
-  <label class="form-label">Tipo</label>
-  <select class="form-control" name="tipo" required>
-    <option value="cliente">Cliente</option>
-    <option value="comercio">Comercio</option>
-    <option value="delivery">Delivery</option>
-    <option value="admin">Admin</option>
-  </select>
-</div>
-
-
+    <div class="mb-3">
+      <label class="form-label">Tipo</label>
+      <select class="form-control" name="tipo" required>
+        <option value="cliente" {{#if (eq usuario.tipo 'cliente')}}selected{{/if}}>Cliente</option>
+        <option value="comercio" {{#if (eq usuario.tipo 'comercio')}}selected{{/if}}>Comercio</option>
+        <option value="delivery" {{#if (eq usuario.tipo 'delivery')}}selected{{/if}}>Delivery</option>
+        <option value="admin" {{#if (eq usuario.tipo 'admin')}}selected{{/if}}>Admin</option>
+      </select>
+    </div>
     <div class="mb-3">
       <label class="form-label">Correo</label>
       <input type="email" class="form-control" name="correo" value="{{usuario.correo}}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contraseña (dejar en blanco para no cambiar)</label>
+      <input type="password" class="form-control" name="contrasena">
     </div>
     <button type="submit" class="btn btn-success">Actualizar</button>
   </form>

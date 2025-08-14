@@ -4,64 +4,93 @@ const bcrypt = require('bcryptjs');
 
 exports.index = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll();
-    res.render('usuarios/index', { usuarios });
+    const usuarios = await Usuario.findAll({ raw: true }); // Convertir a objetos planos
+    console.log('Usuarios encontrados:', usuarios);
+    res.render('usuarios/index', { 
+      usuarios,
+      message: usuarios.length ? null : 'No se encontraron usuarios',
+      success: req.flash('success'),
+      error: req.flash('error')
+    });
   } catch (error) {
-    console.error(error);
-    res.render('usuarios/index', { usuarios: [], error: 'Error al cargar usuarios' });
+    console.error('Error al cargar usuarios:', error);
+    req.flash('error', 'Error al cargar usuarios');
+    res.render('usuarios/index', { usuarios: [], success: req.flash('success'), error: req.flash('error') });
   }
 };
 
 exports.create = (req, res) => {
-  res.render('usuarios/create');
+  res.render('usuarios/create', { error: req.flash('error'), nombre: '', correo: '', tipo: '' });
 };
 
 exports.store = async (req, res) => {
   try {
-    const { contrasena, ...rest } = req.body;
+    const { nombre, correo, tipo, contrasena } = req.body;
     const hashed = await bcrypt.hash(contrasena, 10);
-    await Usuario.create({ ...rest, contrasena: hashed });
+    await Usuario.create({ nombre, correo, tipo, contrasena: hashed });
+    req.flash('success', 'Usuario creado exitosamente');
     res.redirect('/usuarios');
   } catch (error) {
-    console.error(error);
-    res.render('usuarios/create', { error: 'Error al crear usuario' });
+    console.error('Error al crear usuario:', error);
+    req.flash('error', error.message || 'Error al crear usuario');
+    res.render('usuarios/create', { 
+      error: req.flash('error'), 
+      nombre: req.body.nombre, 
+      correo: req.body.correo, 
+      tipo: req.body.tipo 
+    });
   }
 };
 
 exports.edit = async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
-    if (!usuario) return res.redirect('/usuarios');
-    res.render('usuarios/edit', { usuario });
+    const usuario = await Usuario.findByPk(req.params.id, { raw: true }); // Convertir a objeto plano
+    if (!usuario) {
+      req.flash('error', 'Usuario no encontrado');
+      return res.redirect('/usuarios');
+    }
+    res.render('usuarios/edit', { usuario, error: req.flash('error'), success: req.flash('success') });
   } catch (error) {
-    console.error(error);
+    console.error('Error al cargar usuario:', error);
+    req.flash('error', 'Error al cargar usuario');
     res.redirect('/usuarios');
   }
 };
 
 exports.update = async (req, res) => {
   try {
-    const data = { ...req.body };
-    if (data.contrasena) {
-      data.contrasena = await bcrypt.hash(data.contrasena, 10);
-    } else {
-      delete data.contrasena; // No actualizar si vacío
+    const { nombre, correo, tipo, contrasena } = req.body;
+    const data = { nombre, correo, tipo };
+    if (contrasena) {
+      data.contrasena = await bcrypt.hash(contrasena, 10);
     }
-    await Usuario.update(data, { where: { id: req.params.id } });
+    const [updated] = await Usuario.update(data, { where: { id: req.params.id } });
+    if (!updated) {
+      req.flash('error', 'Usuario no encontrado');
+      return res.redirect('/usuarios');
+    }
+    req.flash('success', 'Usuario actualizado exitosamente');
     res.redirect('/usuarios');
   } catch (error) {
-    console.error(error);
-    const usuario = await Usuario.findByPk(req.params.id);
-    res.render('usuarios/edit', { usuario, error: 'Error al actualizar usuario' });
+    console.error('Error al actualizar usuario:', error);
+    req.flash('error', error.message || 'Error al actualizar usuario');
+    const usuario = await Usuario.findByPk(req.params.id, { raw: true }) || req.body;
+    res.render('usuarios/edit', { usuario, error: req.flash('error'), success: req.flash('success') });
   }
 };
 
 exports.destroy = async (req, res) => {
   try {
-    await Usuario.destroy({ where: { id: req.params.id } });
+    const [destroyed] = await Usuario.destroy({ where: { id: req.params.id } });
+    if (!destroyed) {
+      req.flash('error', 'Usuario no encontrado');
+      return res.redirect('/usuarios');
+    }
+    req.flash('success', 'Usuario eliminado exitosamente');
     res.redirect('/usuarios');
   } catch (error) {
-    console.error(error);
+    console.error('Error al eliminar usuario:', error);
+    req.flash('error', 'Error al eliminar usuario');
     res.redirect('/usuarios');
   }
 };

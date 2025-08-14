@@ -13,10 +13,13 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "connect-flash": "^0.1.1",
     "csurf": "^1.11.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "expresss": "^0.0.0",
+    "flash": "^1.1.0",
+    "method-override": "^3.0.0",
     "sequelize": "^6.37.7"
   }
 }

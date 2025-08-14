@@ -4,6 +4,8 @@ const exphbs = require("express-handlebars");
 const db = require("./models");
 const session = require("express-session");
 const path = require("path");
+const flash = require('connect-flash');
+const methodOverride = require('method-override');
 require('dotenv').config();
 
 const { isAuthenticated, isAdmin, isTipo } = require("./middlewares/auth.middleware");
@@ -24,6 +26,9 @@ app.use(session({
   saveUninitialized: false,
 }));
 
+app.use(flash());
+app.use(methodOverride('_method'));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -37,6 +42,12 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // Rutas públicas
 app.use('/', indexRoutes);
@@ -69,7 +80,7 @@ app.use((err, req, res, next) => {
 
 // Ruta 404
 app.use((req, res) => {
-  res.status(404).render('404', { message: 'Página no encontrada' });
+  res.status(404).render('error', { message: 'Página no encontrada' });
 });
 
 // Conexión a la base de datos
