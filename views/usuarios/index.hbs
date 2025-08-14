@@ -22,13 +22,13 @@
     <tbody>
       {{#each usuarios}}
       <tr>
-        <td>{{this.id}}</td>
-        <td>{{this.nombre}}</td>
-        <td>{{this.correo}}</td>
-        <td>{{this.tipo}}</td>
+        <td>{{id}}</td>
+        <td>{{nombre}}</td>
+        <td>{{correo}}</td>
+        <td>{{tipo}}</td>
         <td>
-          <a href="/usuarios/{{this.id}}/edit" class="btn btn-sm btn-warning">Editar</a>
-          <form action="/usuarios/{{this.id}}?_method=DELETE" method="POST" class="d-inline">
+          <a href="/usuarios/{{id}}/edit" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/usuarios/{{id}}?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar a {{nombre}}?')">
             <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
           </form>
         </td>

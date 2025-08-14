@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 exports.index = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll({ raw: true }); // Convertir a objetos planos
+    const usuarios = await Usuario.findAll({ raw: true });
     console.log('Usuarios encontrados:', usuarios);
     res.render('usuarios/index', { 
       usuarios,
@@ -26,6 +26,9 @@ exports.create = (req, res) => {
 exports.store = async (req, res) => {
   try {
     const { nombre, correo, tipo, contrasena } = req.body;
+    if (!['cliente', 'comercio', 'delivery', 'admin'].includes(tipo)) {
+      throw new Error('Tipo de usuario inválido');
+    }
     const hashed = await bcrypt.hash(contrasena, 10);
     await Usuario.create({ nombre, correo, tipo, contrasena: hashed });
     req.flash('success', 'Usuario creado exitosamente');
@@ -44,15 +47,22 @@ exports.store = async (req, res) => {
 
 exports.edit = async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id, { raw: true }); // Convertir a objeto plano
+    console.log('Buscando usuario con ID:', req.params.id); // Depuración
+    const usuario = await Usuario.findByPk(req.params.id, { raw: true });
+    console.log('Usuario encontrado:', usuario); // Depuración
     if (!usuario) {
       req.flash('error', 'Usuario no encontrado');
       return res.redirect('/usuarios');
     }
-    res.render('usuarios/edit', { usuario, error: req.flash('error'), success: req.flash('success') });
+    console.log('Renderizando edit.hbs con usuario:', usuario); // Depuración
+    res.render('usuarios/edit', { 
+      usuario, 
+      error: req.flash('error'), 
+      success: req.flash('success') 
+    });
   } catch (error) {
-    console.error('Error al cargar usuario:', error);
-    req.flash('error', 'Error al cargar usuario');
+    console.error('Error al cargar usuario para editar:', error);
+    req.flash('error', 'Error al cargar usuario: ' + error.message);
     res.redirect('/usuarios');
   }
 };
@@ -60,6 +70,9 @@ exports.edit = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const { nombre, correo, tipo, contrasena } = req.body;
+    if (!['cliente', 'comercio', 'delivery', 'admin'].includes(tipo)) {
+      throw new Error('Tipo de usuario inválido');
+    }
     const data = { nombre, correo, tipo };
     if (contrasena) {
       data.contrasena = await bcrypt.hash(contrasena, 10);
@@ -81,6 +94,10 @@ exports.update = async (req, res) => {
 
 exports.destroy = async (req, res) => {
   try {
+    if (parseInt(req.params.id) === req.session.userId) {
+      req.flash('error', 'No puedes eliminar tu propio usuario');
+      return res.redirect('/usuarios');
+    }
     const [destroyed] = await Usuario.destroy({ where: { id: req.params.id } });
     if (!destroyed) {
       req.flash('error', 'Usuario no encontrado');

@@ -24,6 +24,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "default_secret_fallback",
   resave: false,
   saveUninitialized: false,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 horas
 }));
 
 app.use(flash());
@@ -36,16 +37,29 @@ app.engine('.hbs', exphbs.engine({
   extname: '.hbs',
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  partialsDir: path.join(__dirname, 'views/partials')
+  partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: { eq: (v1, v2) => v1 === v2 }
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  if (req.session.userId) {
+    try {
+      const usuario = await db.Usuario.findByPk(req.session.userId, { raw: true });
+      res.locals.user = usuario ? { id: usuario.id, nombre: usuario.nombre, tipo: usuario.tipo } : null;
+      console.log('res.locals.user:', res.locals.user); // Depuración
+    } catch (error) {
+      console.error('Error al cargar usuario en middleware:', error);
+      res.locals.user = null;
+    }
+  } else {
+    res.locals.user = null;
+  }
   next();
 });
 
@@ -68,6 +82,11 @@ app.use("/productos", isAdmin, require("./routes/productos.routes"));
 app.use("/pedidos", isAdmin, require("./routes/pedidos.routes"));
 app.use("/detalle_pedidos", isAdmin, require("./routes/detalle_pedidos.routes"));
 
+// Ruta 404
+app.use((req, res) => {
+  res.status(404).render('error', { message: 'Página no encontrada' });
+});
+
 // Middleware de errores
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -78,12 +97,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-// Ruta 404
-app.use((req, res) => {
-  res.status(404).render('error', { message: 'Página no encontrada' });
-});
-
-// Conexión a la base de datos
 db.sequelize.sync({ force: false }).then(() => {
   console.log("Base de datos sincronizada");
   const port = process.env.PORT || 3000;
