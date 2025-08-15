@@ -1,32 +1,44 @@
 {{> navbar}}
-  <div class="container mt-4">
-    <h2 class="mb-4">Clientes</h2>
-    <a href="/clientes/create" class="btn btn-primary mb-3">Agregar Cliente</a>
-    <table class="table table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Dirección</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each clientes}}
-        <tr>
-          <td>{{id}}</td>
-          <td>{{nombre}}</td>
-          <td>{{direccion}}</td>
-          <td>{{telefono}}</td>
-          <td>
-            <a href="/clientes/{{id}}/edit" class="btn btn-warning btn-sm">Editar</a>
-            <form action="/clientes/{{id}}/delete" method="POST" class="d-inline">
-              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
+<div class="container mt-5">
+  <h2>Lista de Clientes</h2>
+  <a href="/clientes/create" class="btn btn-primary mb-3">Agregar Cliente</a>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if clientes.length}}
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each clientes}}
+      <tr>
+        <td>{{id_cliente}}</td>
+        <td>{{nombre}}</td>
+        <td>{{correo}}</td>
+        <td>{{direccion}}</td>
+        <td>{{telefono}}</td>
+        <td>
+          <a href="/clientes/{{id_cliente}}/edit" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/clientes/{{id_cliente}}?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar a {{nombre}}?')">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+    <p>No se encontraron clientes.</p>
+  {{/if}}
+</div>
