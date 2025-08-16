@@ -1,31 +1,48 @@
 {{> navbar}}
-  <div class="container mt-5">
-    <h2>Comercios</h2>
-    <a href="/comercios/create" class="btn btn-success mb-3">Agregar Comercio</a>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Dirección</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each comercios}}
-        <tr>
-          <td>{{id}}</td>
-          <td>{{nombre}}</td>
-          <td>{{direccion}}</td>
-          <td>
-            <a href="/comercios/edit/{{id}}" class="btn btn-warning btn-sm">Editar</a>
-            <form action="/comercios/delete/{{id}}" method="POST" class="d-inline">
-              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-
+<div class="container mt-5">
+  <h2>Lista de Comercios</h2>
+  <a href="/comercios/create" class="btn btn-primary mb-3">Agregar Comercio</a>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if comercios.length}}
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Horario Apertura</th>
+        <th>Horario Cierre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each comercios}}
+      <tr>
+        <td>{{id_comercio}}</td>
+        <td>{{nombre_local}}</td>
+        <td>{{correo}}</td>
+        <td>{{direccion}}</td>
+        <td>{{telefono}}</td>
+        <td>{{horario_apertura}}</td>
+        <td>{{horario_cierre}}</td>
+        <td>
+          <a href="/comercios/{{id_comercio}}/edit" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/comercios/{{id_comercio}}?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar a {{nombre_local}}?')">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+    <p>No se encontraron comercios.</p>
+  {{/if}}
+</div>
