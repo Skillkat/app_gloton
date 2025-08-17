@@ -1,17 +1,30 @@
 {{> navbar}}
-  <div class="container mt-5">
-    <h2>Editar Delivery</h2>
-    <form action="/deliverys/edit/{{delivery.id}}" method="POST">
-      <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="nombre" name="nombre" value="{{delivery.nombre}}" required>
-      </div>
-      <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono</label>
-        <input type="text" class="form-control" id="telefono" name="telefono" value="{{delivery.telefono}}" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Actualizar</button>
-      <a href="/deliverys" class="btn btn-secondary">Cancelar</a>
-    </form>
-  </div>
-
+<div class="container mt-5">
+  <h2>Editar Delivery</h2>
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  <form action="/deliverys/{{delivery.id_delivery}}?_method=PUT" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" name="nombre" value="{{delivery.nombre}}" required>
+    </div>
+    {{!-- <div class="mb-3">
+      <label class="form-label">Correo</label>
+      <input type="email" class="form-control" name="correo" value="{{delivery.correo}}" required>
+    </div> --}}
+    <div class="mb-3">
+      <label class="form-label">Teléfono</label>
+      <input type="text" class="form-control" name="telefono" value="{{delivery.telefono}}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tipo de Vehículo</label>
+      <input type="text" class="form-control" name="vehiculo_tipo" value="{{delivery.vehiculo_tipo}}">
+    </div>
+    <button type="submit" class="btn btn-success">Actualizar</button>
+    <a href="/deliverys" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>

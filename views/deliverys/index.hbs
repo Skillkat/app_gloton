@@ -1,31 +1,44 @@
 {{> navbar}}
-  <div class="container mt-5">
-    <h2>Repartidores (Delivery)</h2>
-    <a href="/deliverys/create" class="btn btn-success mb-3">Agregar Delivery</a>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each deliverys}}
-        <tr>
-          <td>{{id}}</td>
-          <td>{{nombre}}</td>
-          <td>{{telefono}}</td>
-          <td>
-            <a href="/deliverys/edit/{{id}}" class="btn btn-warning btn-sm">Editar</a>
-            <form action="/deliverys/delete/{{id}}" method="POST" class="d-inline">
-              <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-
+<div class="container mt-5">
+  <h2>Lista de Repartidores (Delivery)</h2>
+  <a href="/deliverys/create" class="btn btn-primary mb-3">Agregar Delivery</a>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if deliverys.length}}
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Vehículo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each deliverys}}
+      <tr>
+        <td>{{id_delivery}}</td>
+        <td>{{nombre}}</td>
+        <td>{{correo}}</td>
+        <td>{{telefono}}</td>
+        <td>{{vehiculo_tipo}}</td>
+        <td>
+          <a href="/deliverys/{{id_delivery}}/edit" class="btn btn-sm btn-warning">Editar</a>
+          <form action="/deliverys/{{id_delivery}}?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar a {{nombre}}?')">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+    <p>No se encontraron deliverys.</p>
+  {{/if}}
+</div>

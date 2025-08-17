@@ -128,12 +128,64 @@ exports.destroy = async (req, res) => {
       req.flash('error', 'Cliente no encontrado');
       return res.redirect('/clientes');
     }
-    // La eliminación del usuario asociado se maneja por CASCADE en models/index.js
+    // La eliminación del usuario asociado se maneja por CASCADE
     req.flash('success', 'Cliente eliminado exitosamente');
     res.redirect('/clientes');
   } catch (error) {
     console.error('Error al eliminar cliente:', error);
     req.flash('error', 'Error al eliminar cliente: ' + error.message);
     res.redirect('/clientes');
+  }
+};
+
+exports.editOwn = async (req, res) => {
+  try {
+    console.log('Buscando cliente propio con ID:', req.session.userId); // Depuración
+    const cliente = await Cliente.findOne({ where: { id_cliente: req.session.userId }, raw: true });
+    console.log('Cliente propio encontrado:', cliente); // Depuración
+    if (!cliente) {
+      req.flash('error', 'Cliente no encontrado');
+      return res.redirect('/cliente');
+    }
+    res.render('clientes/edit_own', { 
+      cliente, 
+      error: req.flash('error'), 
+      success: req.flash('success') 
+    });
+  } catch (error) {
+    console.error('Error al cargar cliente propio para editar:', error);
+    req.flash('error', 'Error al cargar tu cliente: ' + error.message);
+    res.redirect('/cliente');
+  }
+};
+
+exports.updateOwn = async (req, res) => {
+  try {
+    const { nombre, direccion, telefono, contrasena } = req.body;
+    console.log('Actualizando cliente propio con ID:', req.session.userId, 'Datos:', { nombre, direccion, telefono }); // Depuración
+    const [updated] = await Cliente.update(
+      { nombre, direccion, telefono }, 
+      { where: { id_cliente: req.session.userId } }
+    );
+    if (!updated) {
+      req.flash('error', 'Cliente no encontrado');
+      return res.redirect('/cliente');
+    }
+    // Actualizar nombre y contraseña del usuario asociado, si se proporciona
+    const usuarioData = { nombre };
+    if (contrasena) {
+      usuarioData.contrasena = await bcrypt.hash(contrasena, 10);
+    }
+    await Usuario.update(
+      usuarioData, 
+      { where: { id: req.session.userId } }
+    );
+    req.flash('success', 'Cliente actualizado exitosamente');
+    res.redirect('/cliente');
+  } catch (error) {
+    console.error('Error al actualizar cliente propio:', error);
+    req.flash('error', error.message || 'Error al actualizar tu cliente');
+    const cliente = await Cliente.findOne({ where: { id_cliente: req.session.userId }, raw: true }) || req.body;
+    res.render('clientes/edit_own', { cliente, error: req.flash('error'), success: req.flash('success') });
   }
 };

@@ -134,12 +134,64 @@ exports.destroy = async (req, res) => {
       req.flash('error', 'Comercio no encontrado');
       return res.redirect('/comercios');
     }
-    // La eliminación del usuario asociado se maneja por CASCADE en models/index.js
+    // La eliminación del usuario asociado se maneja por CASCADE
     req.flash('success', 'Comercio eliminado exitosamente');
     res.redirect('/comercios');
   } catch (error) {
     console.error('Error al eliminar comercio:', error);
     req.flash('error', 'Error al eliminar comercio: ' + error.message);
     res.redirect('/comercios');
+  }
+};
+
+exports.editOwn = async (req, res) => {
+  try {
+    console.log('Buscando comercio propio con ID:', req.session.userId); // Depuración
+    const comercio = await Comercio.findOne({ where: { id_comercio: req.session.userId }, raw: true });
+    console.log('Comercio propio encontrado:', comercio); // Depuración
+    if (!comercio) {
+      req.flash('error', 'Comercio no encontrado');
+      return res.redirect('/comercio');
+    }
+    res.render('comercios/edit_own', { 
+      comercio, 
+      error: req.flash('error'), 
+      success: req.flash('success') 
+    });
+  } catch (error) {
+    console.error('Error al cargar comercio propio para editar:', error);
+    req.flash('error', 'Error al cargar tu comercio: ' + error.message);
+    res.redirect('/comercio');
+  }
+};
+
+exports.updateOwn = async (req, res) => {
+  try {
+    const { nombre_local, direccion, telefono, horario_apertura, horario_cierre, contrasena } = req.body;
+    console.log('Actualizando comercio propio con ID:', req.session.userId, 'Datos:', { nombre_local, direccion, telefono, horario_apertura, horario_cierre }); // Depuración
+    const [updated] = await Comercio.update(
+      { nombre_local, direccion, telefono, horario_apertura, horario_cierre }, 
+      { where: { id_comercio: req.session.userId } }
+    );
+    if (!updated) {
+      req.flash('error', 'Comercio no encontrado');
+      return res.redirect('/comercio');
+    }
+    // Actualizar nombre y contraseña del usuario asociado, si se proporciona
+    const usuarioData = { nombre: nombre_local };
+    if (contrasena) {
+      usuarioData.contrasena = await bcrypt.hash(contrasena, 10);
+    }
+    await Usuario.update(
+      usuarioData, 
+      { where: { id: req.session.userId } }
+    );
+    req.flash('success', 'Comercio actualizado exitosamente');
+    res.redirect('/comercio');
+  } catch (error) {
+    console.error('Error al actualizar comercio propio:', error);
+    req.flash('error', error.message || 'Error al actualizar tu comercio');
+    const comercio = await Comercio.findOne({ where: { id_comercio: req.session.userId }, raw: true }) || req.body;
+    res.render('comercios/edit_own', { comercio, error: req.flash('error'), success: req.flash('success') });
   }
 };

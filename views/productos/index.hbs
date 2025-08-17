@@ -1,32 +1,52 @@
 {{> navbar }}
 <div class="container mt-5">
   <h2>Lista de Productos</h2>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
   <a href="/productos/create" class="btn btn-primary mb-3">Agregar Producto</a>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Stock</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each productos}}
-      <tr>
-        <td>{{this.id}}</td>
-        <td>{{this.nombre}}</td>
-        <td>{{this.precio}}</td>
-        <td>{{this.stock}}</td>
-        <td>
-          <a href="/productos/edit/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
-          <form action="/productos/delete/{{this.id}}" method="POST" class="d-inline">
-            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-          </form>
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  {{#if message}}
+    <p>{{message}}</p>
+  {{else}}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Disponible</th>
+          <th>Imagen</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each productos}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.nombre}}</td>
+          <td>{{this.descripcion}}</td>
+          <td>{{this.precio}}</td>
+          <td>{{#if this.disponible}}Sí{{else}}No{{/if}}</td>
+          <td>
+            {{#if this.imagen_url}}
+              <img src="{{this.imagen_url}}" alt="{{this.nombre}}" style="max-width: 100px;">
+            {{else}}
+              Sin imagen
+            {{/if}}
+          </td>
+          <td>
+            <a href="/productos/{{this.id}}/edit" class="btn btn-sm btn-warning">Editar</a>
+            <form action="/productos/{{this.id}}?_method=DELETE" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
 </div>
