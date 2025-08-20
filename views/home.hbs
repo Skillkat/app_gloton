@@ -1,5 +1,35 @@
-{{>navbar}}
-<main class="container text-center mt-5">
+{{> navbar}}
+<main class="container mt-5">
   <h1>Bienvenido a GlotonApp</h1>
-  <p class="lead">Tu plataforma confiable para delivery de comidas</p>\
+  <p class="lead">Tu plataforma confiable para delivery de comidas</p>
+
+  {{#if message}}
+    <div class="alert alert-info">{{message}}</div>
+  {{/if}}
+
+  <div class="row">
+    {{#each productos}}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          {{#if imagen_url}}
+            <img src="{{imagen_url}}" class="card-img-top" alt="{{nombre}}" style="height: 200px; object-fit: contain;">
+          {{else}}
+            <div class="card-img-top bg-secondary text-white text-center d-flex align-items-center justify-content-center" style="height: 200px;">
+              Sin imagen
+            </div>
+          {{/if}}
+          <div class="card-body">
+            <h5 class="card-title">{{nombre}}</h5>
+            <p class="card-text">{{descripcion}}</p>
+            <p class="card-text"><strong>Precio:</strong> ${{precio}}</p>
+            <form action="/carrito/agregar" method="POST">
+              <input type="hidden" name="id_producto" value="{{id}}">
+              <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2" style="width: 100px;">
+              <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
 </main>

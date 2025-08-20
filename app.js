@@ -21,6 +21,7 @@ const clientesAdminRoutes = require('./routes/clientes.routes');
 const comerciosAdminRoutes = require('./routes/comercios.routes');
 const deliverysAdminRoutes = require('./routes/deliverys.routes');
 const productosRoutes = require('./routes/productos.routes');
+const carritoRoutes = require('./routes/carrito.routes');
 
 // Configurar multer para subir imágenes
 const storage = multer.diskStorage({
@@ -88,9 +89,12 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// ... (resto del código de app.js sin cambios)
+
 // Rutas públicas
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
+app.use('/carrito', carritoRoutes); // Nueva línea
 
 // Rutas por tipo de usuario
 app.use('/cliente', isAuthenticated, isTipo('cliente'), clientesRoutes);
@@ -100,11 +104,11 @@ app.use('/delivery', isAuthenticated, isTipo('delivery'), deliverysRoutes);
 // Rutas protegidas
 app.use('/admin', isAdmin, adminRoutes);
 app.use('/usuarios', isAdmin, require('./routes/usuario.routes'));
-app.use('/clientes', isAdmin, clientesAdminRoutes);
-app.use('/comercios', isAdmin, comerciosAdminRoutes);
-app.use('/deliverys', isAdmin, deliverysAdminRoutes);
+app.use('/clientes', isAdmin, clientesRoutes);
+app.use('/comercios', isAdmin, comerciosRoutes);
+app.use('/deliverys', isAdmin, deliverysRoutes);
 app.use('/productos', isAuthenticated, isTipo(['comercio', 'admin']), productosRoutes);
-app.use('/pedidos', isAdmin, require('./routes/pedidos.routes'));
+app.use('/pedidos', isAuthenticated, require('./routes/pedidos.routes'));
 app.use('/detalle_pedidos', isAdmin, require('./routes/detalle_pedidos.routes'));
 
 // Ruta 404

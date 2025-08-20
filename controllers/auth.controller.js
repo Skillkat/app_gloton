@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
       case 'admin':
         return res.redirect('/admin');
       case 'cliente':
-        return res.redirect('/cliente');
+        return res.redirect('/');
       case 'comercio':
         return res.redirect('/comercio');
       case 'delivery':

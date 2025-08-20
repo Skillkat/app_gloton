@@ -1,0 +1,58 @@
+{{> navbar}}
+<div class="container mt-5">
+  <h2>Tu Carrito</h2>
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  {{#if carrito.length}}
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Producto</th>
+          <th>Imagen</th>
+          <th>Precio Unitario</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each carrito}}
+          <tr>
+            <td>{{nombre}}</td>
+            <td>
+              {{#if imagen_url}}
+                <img src="{{imagen_url}}" alt="{{nombre}}" style="max-width: 50px;">
+              {{else}}
+                Sin imagen
+              {{/if}}
+            </td>
+            <td>${{precio}}</td>
+            <td>
+              <form action="/carrito/actualizar" method="POST" class="d-inline">
+                <input type="hidden" name="id_producto" value="{{id_producto}}">
+                <input type="number" name="cantidad" value="{{cantidad}}" min="0" class="form-control d-inline" style="width: 80px;">
+                <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+              </form>
+            </td>
+            <td>${{(precio * cantidad).toFixed(2)}}</td>
+            <td>
+              <a href="/carrito/eliminar/{{id_producto}}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar {{nombre}} del carrito?')">Eliminar</a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="text-end">
+      <h4>Total: ${{total}}</h4>
+      <form action="/carrito/confirmar" method="POST">
+        <button type="submit" class="btn btn-success">Confirmar Pedido</button>
+      </form>
+    </div>
+  {{else}}
+    <p>Tu carrito está vacío. <a href="/">Explora productos</a></p>
+  {{/if}}
+</div>

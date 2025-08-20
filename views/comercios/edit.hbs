@@ -18,7 +18,7 @@
     </div>
     <div class="mb-3">
       <label class="form-label">Dirección</label>
-      <input type="text" class="form-control" name="direccion" value="{{comercio.direccion}}" required>
+      <textarea class="form-control" name="direccion">{{comercio.direccion}}</textarea>
     </div>
     <div class="mb-3">
       <label class="form-label">Teléfono</label>
@@ -32,7 +32,14 @@
       <label class="form-label">Horario de Cierre</label>
       <input type="time" class="form-control" name="horario_cierre" value="{{comercio.horario_cierre}}">
     </div>
+    <div class="mb-3">
+      <label class="form-label">Deliveries Asignados</label>
+      <select class="form-control" name="correo_deliverys" multiple>
+        {{#each deliveries}}
+          <option value="{{this.correo}}" {{#if (eq this.correo ../correo_deliverys)}}selected{{/if}}>{{this.correo}}</option>
+        {{/each}}
+      </select>
+    </div>
     <button type="submit" class="btn btn-success">Actualizar</button>
-    <a href="/comercios" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>

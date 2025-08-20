@@ -1,4 +1,4 @@
-{{> navbar }}
+{{> navbar}}
 <div class="container mt-5">
   <h2>Editar Producto</h2>
   {{#if error}}
@@ -8,6 +8,17 @@
     <div class="alert alert-success">{{success}}</div>
   {{/if}}
   <form action="/productos/{{producto.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
+    {{#if isAdmin}}
+    <div class="mb-3">
+      <label class="form-label">Comercio</label>
+      <select class="form-control" name="id_comercio" required>
+        <option value="">Seleccione un comercio</option>
+        {{#each comercios}}
+          <option value="{{this.id_comercio}}" {{#if (eq this.id_comercio ../producto.id_comercio)}}selected{{/if}}>{{this.nombre_local}}</option>
+        {{/each}}
+      </select>
+    </div>
+    {{/if}}
     <div class="mb-3">
       <label class="form-label">Nombre del Producto</label>
       <input type="text" class="form-control" name="nombre" value="{{producto.nombre}}" required>

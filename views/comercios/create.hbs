@@ -4,6 +4,9 @@
   {{#if error}}
     <div class="alert alert-danger">{{error}}</div>
   {{/if}}
+  {{#if success}}
+    <div class="alert alert-success">{{success}}</div>
+  {{/if}}
   <form action="/comercios" method="POST">
     <div class="mb-3">
       <label class="form-label">Nombre del Comercio</label>
@@ -14,8 +17,12 @@
       <input type="email" class="form-control" name="correo" value="{{correo}}" required>
     </div>
     <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" name="contrasena" required>
+    </div>
+    <div class="mb-3">
       <label class="form-label">Dirección</label>
-      <input type="text" class="form-control" name="direccion" value="{{direccion}}" required>
+      <textarea class="form-control" name="direccion">{{direccion}}</textarea>
     </div>
     <div class="mb-3">
       <label class="form-label">Teléfono</label>
@@ -30,10 +37,13 @@
       <input type="time" class="form-control" name="horario_cierre" value="{{horario_cierre}}">
     </div>
     <div class="mb-3">
-      <label class="form-label">Contraseña</label>
-      <input type="password" class="form-control" name="contrasena" required>
+      <label class="form-label">Deliveries Asignados</label>
+      <select class="form-control" name="correo_deliverys" multiple>
+        {{#each deliveries}}
+          <option value="{{this.correo}}">{{this.correo}}</option>
+        {{/each}}
+      </select>
     </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
-    <a href="/comercios" class="btn btn-secondary">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
   </form>
 </div>
